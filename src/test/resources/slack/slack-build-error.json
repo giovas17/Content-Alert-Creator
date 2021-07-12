@@ -1,0 +1,44 @@
+[
+  {
+    "color": "#E91E1E",
+    "blocks": [
+      {
+        "text": {
+          "text": "*ThiveMarketTest*",
+          "type": "mrkdwn"
+        },
+        "type": "section"
+      },
+      {
+        "type": "section",
+        "fields": [
+          {
+            "text": "*Job:*\nBuild",
+            "type": "mrkdwn"
+          },
+          {
+            "text": "*State:*\nERRORED",
+            "type": "mrkdwn"
+          },
+          {
+            "text": "*Message:*\n'This is a test error message for the alert'",
+            "type": "mrkdwn"
+          },
+          {
+            "text": "*Version:*\n2.0",
+            "type": "mrkdwn"
+          }
+        ]
+      },
+      {
+        "elements": [
+          {
+            "text": "https://www.example.com/error",
+            "type": "mrkdwn"
+          }
+        ],
+        "type": "context"
+      }
+    ]
+  }
+]
