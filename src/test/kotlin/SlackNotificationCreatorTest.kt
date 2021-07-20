@@ -15,8 +15,9 @@ class SlackNotificationCreatorTest {
         val statePipeline = "Success"
         val message = "'This is a test message for the alert'"
         val linkForBuild = "https://www.example.com"
+        val version = "1.0"
 
-        SlackNotificationsCreator(mockArgumentsToSlackCreation(typeBuild, statePipeline, message, linkForBuild))
+        SlackNotificationsCreator(mockArgumentsToSlackCreation(typeBuild, statePipeline, message, linkForBuild, version))
         val contentBuildJson = JSONArray(manager.readFileAsStringResult("src/test/resources/slack/slack-build-success.json"))
         val contentResultFile = JSONArray(manager.readFileAsStringResult(filePath))
         JSONAssert.assertEquals(contentBuildJson, contentResultFile, JSONCompareMode.LENIENT)
@@ -28,14 +29,17 @@ class SlackNotificationCreatorTest {
         val statePipeline = "Errored"
         val message = "'This is a test error message for the alert'"
         val linkForBuild = "https://www.example.com/error"
+        val version = "2.0"
 
-        SlackNotificationsCreator(mockArgumentsToSlackCreation(typeBuild, statePipeline, message, linkForBuild))
+        SlackNotificationsCreator(mockArgumentsToSlackCreation(typeBuild, statePipeline, message, linkForBuild, version))
         val contentBuildJson = JSONArray(manager.readFileAsStringResult("src/test/resources/slack/slack-build-error.json"))
         val contentResultFile = JSONArray(manager.readFileAsStringResult(filePath))
         JSONAssert.assertEquals(contentBuildJson, contentResultFile, JSONCompareMode.LENIENT)
     }
 
-    private fun mockArgumentsToSlackCreation(typeBuild: String, state: String, message: String, link: String) = arrayOf(
-        typeAlert, typeBuild, state, message, link, filePath
-    )
+    private fun mockArgumentsToSlackCreation(typeBuild: String, state: String, message: String, link: String,
+        version: String) = arrayOf(
+            typeAlert, "job=$typeBuild", "state=$state", "message=$message", "link=$link", "file=$filePath",
+            "app_name=ThiveMarketTest", "version_name=$version"
+        )
 }

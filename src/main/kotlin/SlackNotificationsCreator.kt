@@ -2,35 +2,41 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class SlackNotificationsCreator(arguments: Array<String>) {
-    private val appName = "ThiveMarketTest"
+    private var appName = defaultAppName
 
     init {
         readAndProcessArguments(arguments)
     }
 
     private fun readAndProcessArguments(arguments: Array<String>) {
-        if (arguments.size < 4) {
+        if (arguments.size < 5) {
             return
         }
-        val action = arguments[1]
-        val state = when (arguments[2].toLowerCase()) {
+        appName = arguments.find { it.toLowerCase().startsWith(appNameParam) }?.substring(appNameParam.length)
+            ?: defaultAppName
+        val action = arguments.find { it.toLowerCase().startsWith(jobParam) }?.substring(jobParam.length)
+        val stateStr = arguments.find { it.toLowerCase().startsWith(stateParam) }?.substring(stateParam.length)
+        val state = when (stateStr?.toLowerCase()) {
             "success" -> PipelineState.SUCCESS
             "failed" -> PipelineState.FAILED
             "aborted" -> PipelineState.ABORTED
             else -> PipelineState.ERRORED
         }
-        val message = arguments[3]
-        val linkToBuild = arguments[4]
-        val pathFile = arguments[5]
-        val slackFormatJSON = createAttachmentsJSON(action, state, message, linkToBuild)
-        writeFile(slackFormatJSON, pathFile)
+        val message = arguments.find { it.toLowerCase().startsWith(messageParam) }?.substring(messageParam.length)
+        val linkToBuild = arguments.find { it.toLowerCase().startsWith(linkParam) }?.substring(linkParam.length)
+        val pathFile = arguments.find { it.toLowerCase().startsWith(fileParam) }?.substring(fileParam.length)
+        val versionName = arguments.find { it.toLowerCase().startsWith(versionNameParam) }
+            ?.substring(versionNameParam.length)
+        val slackFormatJSON = createAttachmentsJSON(action, state, message, linkToBuild, versionName)
+        pathFile?.let { path -> writeFile(slackFormatJSON, path) }
     }
 
     private fun createAttachmentsJSON(
         action: String?,
         state: PipelineState?,
         message: String?,
-        link: String?
+        link: String?,
+        version: String?
     ): JSONArray {
         val attachments = JSONArray()
         val blocks = JSONArray()
@@ -43,7 +49,7 @@ class SlackNotificationsCreator(arguments: Array<String>) {
             put(generateMarkdownJSON("*Job:*\n$action"))
             put(generateMarkdownJSON("*State:*\n${state?.name}"))
             put(generateMarkdownJSON("*Message:*\n$message"))
-            put(generateMarkdownJSON("*Version:*\n2.0"))
+            put(generateMarkdownJSON("*Version:*\n$version"))
         }
         val dataContent = JSONObject().apply {
             put("type", "section")
@@ -79,5 +85,16 @@ class SlackNotificationsCreator(arguments: Array<String>) {
 
     private fun writeFile(slackContent: JSONArray, pathFile: String) = with(FileManager()) {
         writeFile(slackContent.toString(), pathFile)
+    }
+
+    private companion object {
+        const val defaultAppName = "Thrive Market"
+        const val jobParam = "job="
+        const val stateParam = "state="
+        const val messageParam = "message="
+        const val linkParam = "link="
+        const val fileParam = "file="
+        const val appNameParam = "app_name="
+        const val versionNameParam = "version_name="
     }
 }
