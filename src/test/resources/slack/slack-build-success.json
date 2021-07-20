@@ -21,7 +21,7 @@
             "type": "mrkdwn"
           },
           {
-            "text": "*Message:*\n'This is a test message for the alert'",
+            "text": "*Message:*\n'This is a test message for the alert' :confetti_ball:",
             "type": "mrkdwn"
           },
           {

@@ -48,7 +48,16 @@ class SlackNotificationsCreator(arguments: Array<String>) {
         val fields = JSONArray().apply {
             put(generateMarkdownJSON("*Job:*\n$action"))
             put(generateMarkdownJSON("*State:*\n${state?.name}"))
-            put(generateMarkdownJSON("*Message:*\n$message"))
+            val icon = if (state == PipelineState.SUCCESS) {
+                if (action?.equals("test", true) == true) {
+                    ":dart:"
+                } else {
+                    ":confetti_ball:"
+                }
+            } else {
+                ":rotating_light:"
+            }
+            put(generateMarkdownJSON("*Message:*\n$message $icon"))
             put(generateMarkdownJSON("*Version:*\n$version"))
         }
         val dataContent = JSONObject().apply {

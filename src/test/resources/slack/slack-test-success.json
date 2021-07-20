@@ -1,6 +1,6 @@
 [
   {
-    "color": "#E91E1E",
+    "color": "#4CAF50",
     "blocks": [
       {
         "text": {
@@ -13,19 +13,19 @@
         "type": "section",
         "fields": [
           {
-            "text": "*Job:*\nBuild",
+            "text": "*Job:*\nTest",
             "type": "mrkdwn"
           },
           {
-            "text": "*State:*\nERRORED",
+            "text": "*State:*\nSUCCESS",
             "type": "mrkdwn"
           },
           {
-            "text": "*Message:*\n'This is a test error message for the alert' :rotating_light:",
+            "text": "*Message:*\n'All tests have been passed' :dart:",
             "type": "mrkdwn"
           },
           {
-            "text": "*Version:*\n2.0",
+            "text": "*Version:*\n1.0",
             "type": "mrkdwn"
           }
         ]
@@ -33,7 +33,7 @@
       {
         "elements": [
           {
-            "text": "https://www.example.com/error",
+            "text": "https://www.example.com",
             "type": "mrkdwn"
           }
         ],

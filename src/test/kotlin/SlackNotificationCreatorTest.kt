@@ -37,6 +37,34 @@ class SlackNotificationCreatorTest {
         JSONAssert.assertEquals(contentBuildJson, contentResultFile, JSONCompareMode.LENIENT)
     }
 
+    @Test
+    fun testFileCreation() {
+        val typeBuild = "Test"
+        val statePipeline = "Success"
+        val message = "'All tests have been passed'"
+        val linkForBuild = "https://www.example.com"
+        val version = "1.0"
+
+        SlackNotificationsCreator(mockArgumentsToSlackCreation(typeBuild, statePipeline, message, linkForBuild, version))
+        val contentBuildJson = JSONArray(manager.readFileAsStringResult("src/test/resources/slack/slack-test-success.json"))
+        val contentResultFile = JSONArray(manager.readFileAsStringResult(filePath))
+        JSONAssert.assertEquals(contentBuildJson, contentResultFile, JSONCompareMode.LENIENT)
+    }
+
+    @Test
+    fun testFileCreationWithError() {
+        val typeBuild = "Test"
+        val statePipeline = "Errored"
+        val message = "'Some tests have failed'"
+        val linkForBuild = "https://www.example.com/error"
+        val version = "2.0"
+
+        SlackNotificationsCreator(mockArgumentsToSlackCreation(typeBuild, statePipeline, message, linkForBuild, version))
+        val contentBuildJson = JSONArray(manager.readFileAsStringResult("src/test/resources/slack/slack-test-error.json"))
+        val contentResultFile = JSONArray(manager.readFileAsStringResult(filePath))
+        JSONAssert.assertEquals(contentBuildJson, contentResultFile, JSONCompareMode.LENIENT)
+    }
+
     private fun mockArgumentsToSlackCreation(typeBuild: String, state: String, message: String, link: String,
         version: String) = arrayOf(
             typeAlert, "job=$typeBuild", "state=$state", "message=$message", "link=$link", "file=$filePath",

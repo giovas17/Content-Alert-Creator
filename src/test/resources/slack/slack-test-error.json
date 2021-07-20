@@ -13,7 +13,7 @@
         "type": "section",
         "fields": [
           {
-            "text": "*Job:*\nBuild",
+            "text": "*Job:*\nTest",
             "type": "mrkdwn"
           },
           {
@@ -21,7 +21,7 @@
             "type": "mrkdwn"
           },
           {
-            "text": "*Message:*\n'This is a test error message for the alert' :rotating_light:",
+            "text": "*Message:*\n'Some tests have failed' :rotating_light:",
             "type": "mrkdwn"
           },
           {
