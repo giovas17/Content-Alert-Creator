@@ -1,4 +1,7 @@
 class AppCenterInformationCreator(arguments: Array<String>) {
+
+    private lateinit var prInfo: PrInformationManager
+
     init {
         readAndProcessArguments(arguments)
     }
@@ -6,20 +9,41 @@ class AppCenterInformationCreator(arguments: Array<String>) {
     private fun readAndProcessArguments(arguments: Array<String>) {
         val platform = arguments.find { it.toLowerCase().startsWith(platformParam) }?.substring(platformParam.length)
             ?: defaultPlatform
-        val buildTitle = arguments.find { it.toLowerCase().startsWith(titleParam) }?.substring(titleParam.length)
-            ?.replace("'", "")
-        val jiraTicket = arguments.find { it.toLowerCase().startsWith(ticketParam) }?.substring(ticketParam.length)
+        val prInformation = arguments.find { it.toLowerCase().startsWith(prParam) }?.substring(prParam.length)
+        prInfo = PrInformationManager(prInformation.orEmpty())
+        val buildTitle = getTitlePr()
+        val jiraTicket = getJiraTicketNumber()
         val filePath = arguments.find { it.toLowerCase().startsWith(fileParam) }?.substring(fileParam.length)
-        val environment = arguments.find { it.toLowerCase().startsWith(environmentParam) }
-            ?.substring(environmentParam.length) ?: defaultEnvironment
-        val optimizedTesting = arguments.find { it.toLowerCase().startsWith(optimizedTestingParam) }
-            ?.substring(optimizedTestingParam.length) ?: noneValue
-        val amplitudeTesting = arguments.find { it.toLowerCase().startsWith(amplitudeTestingParam) }
-            ?.substring(amplitudeTestingParam.length) ?: noneValue
-        val additionalInfo = arguments.find { it.toLowerCase().startsWith(additionalInfoParam) }
-            ?.substring(additionalInfoParam.length) ?: noneValue
-        processInformation(platform, buildTitle, jiraTicket, environment, optimizedTesting,
-            amplitudeTesting, additionalInfo, filePath)
+        val environment = (arguments.find { it.toLowerCase().startsWith(environmentParam) }
+            ?.substring(environmentParam.length) ?: defaultEnvironment).ifEmpty { defaultEnvironment }
+        val optimizedTesting = (arguments.find { it.toLowerCase().startsWith(optimizedTestingParam) }
+            ?.substring(optimizedTestingParam.length)?.replace("'", "") ?: noneValue).ifEmpty { noneValue }
+        val amplitudeTesting = (arguments.find { it.toLowerCase().startsWith(amplitudeTestingParam) }
+            ?.substring(amplitudeTestingParam.length)?.replace("'", "") ?: noneValue).ifEmpty { noneValue }
+        val additionalInfo = (arguments.find { it.toLowerCase().startsWith(additionalInfoParam) }
+            ?.substring(additionalInfoParam.length)?.replace("'", "") ?: noneValue).ifEmpty { noneValue }
+        processInformation(
+            platform, buildTitle, jiraTicket, environment, optimizedTesting,
+            amplitudeTesting, additionalInfo, filePath
+        )
+    }
+
+    private fun getTitlePr(): String {
+        val indexDelimiter = prInfo.title?.indexOf(delimiter) ?: -1
+        return if ((indexDelimiter != -1) && prInfo.title?.startsWith("AN") == true) {
+            prInfo.title?.substring(indexDelimiter + 3, prInfo.title?.length ?: 0).orEmpty().trim()
+        } else {
+            prInfo.title.orEmpty()
+        }
+    }
+
+    private fun getJiraTicketNumber(): String {
+        val indexDelimiter = prInfo.title?.indexOf(delimiter) ?: -1
+        return if ((indexDelimiter != -1) && prInfo.title?.startsWith("AN") == true) {
+            prInfo.title?.substring(0, indexDelimiter).orEmpty().trim()
+        } else {
+            ""
+        }
     }
 
     private fun processInformation(
@@ -36,7 +60,8 @@ class AppCenterInformationCreator(arguments: Array<String>) {
         with(buffer) {
             append(platform).append(" - ").append(buildTitle)
             append("\n\n")
-            append("What's included in this build: ").append("[$linkToJira$jiraTicket]").append("($linkToJira$jiraTicket)")
+            append("What's included in this build: ").append("[$linkToJira$jiraTicket]")
+                .append("($linkToJira$jiraTicket)")
             append("\n\n")
             append("Environment: ").append(environment)
             append("\n\n")
@@ -55,8 +80,7 @@ class AppCenterInformationCreator(arguments: Array<String>) {
 
     private companion object {
         const val platformParam = "platform="
-        const val titleParam = "title="
-        const val ticketParam = "jira="
+        const val prParam = "pr_information="
         const val environmentParam = "environment="
         const val optimizedTestingParam = "optimized_testing="
         const val amplitudeTestingParam = "amplitude_testing="
@@ -66,5 +90,6 @@ class AppCenterInformationCreator(arguments: Array<String>) {
         const val defaultEnvironment = "Staging"
         const val defaultPlatform = "Android"
         const val linkToJira = "https://thrivemarket.atlassian.net/browse/"
+        const val delimiter = " - "
     }
 }

@@ -1,6 +1,6 @@
-Android - This is the test title
+Android - Test-CI/CD Concourse pipeline title
 
-What's included in this build: [https://thrivemarket.atlassian.net/browse/AN-13111](https://thrivemarket.atlassian.net/browse/AN-13111)
+What's included in this build: [https://thrivemarket.atlassian.net/browse/AN-12255](https://thrivemarket.atlassian.net/browse/AN-12255)
 
 Environment: Staging
 

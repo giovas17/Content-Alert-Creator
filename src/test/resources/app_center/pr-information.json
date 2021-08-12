@@ -1,0 +1,46 @@
+[
+  {
+    "name": "pr",
+    "value": "2900"
+  },
+  {
+    "name": "title",
+    "value": "AN-12255 - Test-CI/CD Concourse pipeline title"
+  },
+  {
+    "name": "url",
+    "value": "https://github.com/ThriveMarket/android/pull/2900"
+  },
+  {
+    "name": "head_name",
+    "value": "test/ci_cd_pipeline_flow"
+  },
+  {
+    "name": "head_sha",
+    "value": "9a0269fb6dd2a887315d7ec10bf78236beec5d52"
+  },
+  {
+    "name": "base_name",
+    "value": "feature/adding_concourse_ci_implementation"
+  },
+  {
+    "name": "base_sha",
+    "value": "fd38b1611a03842423bf702fe28921e41b774b4a"
+  },
+  {
+    "name": "message",
+    "value": "Fixing paths"
+  },
+  {
+    "name": "author",
+    "value": "giovas17"
+  },
+  {
+    "name": "author_email",
+    "value": "darkgeat@gmail.com"
+  },
+  {
+    "name": "state",
+    "value": "OPEN"
+  }
+]
