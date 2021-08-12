@@ -11,9 +11,13 @@ class AppCenterInformationCreator(arguments: Array<String>) {
             ?: defaultPlatform
         val prInformationPath = arguments.find { it.toLowerCase().startsWith(prParam) }?.substring(prParam.length)
         val prInformation = FileManager().readFileAsStringResult(prInformationPath.orEmpty())
+        println(prInformation)
         prInfo = PrInformationManager(prInformation)
+        println("prInfo: $prInfo.toString()")
         val buildTitle = getTitlePr()
+        println("title from Pr: $buildTitle")
         val jiraTicket = getJiraTicketNumber()
+        println("jira from title: $jiraTicket")
         val filePath = arguments.find { it.toLowerCase().startsWith(fileParam) }?.substring(fileParam.length)
         val environment = (arguments.find { it.toLowerCase().startsWith(environmentParam) }
             ?.substring(environmentParam.length) ?: defaultEnvironment).ifEmpty { defaultEnvironment }
