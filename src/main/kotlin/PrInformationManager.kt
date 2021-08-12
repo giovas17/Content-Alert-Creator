@@ -24,7 +24,7 @@ class PrInformationManager(jsonContent: String) {
         prInformation = JSONArray(jsonContent)
         for (index in 0 until prInformation.length()) {
             val obj = prInformation.getJSONObject(index)
-            info[obj.getString("name")] = obj.getString("value")
+            info[obj.getString("name")] = obj.optString("value", "")
         }
         number = findValueFor("pr")
         title = findValueFor("title")

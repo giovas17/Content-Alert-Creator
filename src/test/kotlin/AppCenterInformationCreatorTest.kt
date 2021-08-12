@@ -1,4 +1,3 @@
-import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertTrue
 
@@ -8,16 +7,10 @@ class AppCenterInformationCreatorTest {
     private val filePath = "src/test/resources/app_center/test.md"
     private val prInformationPath = "src/test/resources/app_center/pr-information.json"
     private val manager = FileManager()
-    private lateinit var prInfo: String
-
-    @Before
-    fun setup() {
-        prInfo = manager.readFileAsStringResult(prInformationPath)
-    }
 
     @Test
     fun defaultParamsCreation() {
-        AppCenterInformationCreator(mockArgumentsForAppCenterInfoDefault(prInformation = prInfo))
+        AppCenterInformationCreator(mockArgumentsForAppCenterInfoDefault(prInformation = prInformationPath))
         val resultFileContent = manager.readFileAsStringResult(filePath)
         val expectedFileContent =
             manager.readFileAsStringResult("src/test/resources/app_center/app-center-test-default.md")
@@ -39,7 +32,7 @@ class AppCenterInformationCreatorTest {
                 optimizedTesting,
                 amplitudeTesting,
                 additionalInfo,
-                prInfo
+                prInformationPath
             )
         )
         val resultFileContent = manager.readFileAsStringResult(filePath)

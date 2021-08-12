@@ -9,8 +9,9 @@ class AppCenterInformationCreator(arguments: Array<String>) {
     private fun readAndProcessArguments(arguments: Array<String>) {
         val platform = arguments.find { it.toLowerCase().startsWith(platformParam) }?.substring(platformParam.length)
             ?: defaultPlatform
-        val prInformation = arguments.find { it.toLowerCase().startsWith(prParam) }?.substring(prParam.length)
-        prInfo = PrInformationManager(prInformation.orEmpty())
+        val prInformationPath = arguments.find { it.toLowerCase().startsWith(prParam) }?.substring(prParam.length)
+        val prInformation = FileManager().readFileAsStringResult(prInformationPath.orEmpty())
+        prInfo = PrInformationManager(prInformation)
         val buildTitle = getTitlePr()
         val jiraTicket = getJiraTicketNumber()
         val filePath = arguments.find { it.toLowerCase().startsWith(fileParam) }?.substring(fileParam.length)
