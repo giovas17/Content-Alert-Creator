@@ -2,7 +2,8 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class SlackNotificationsCreator(arguments: Array<String>) {
-    private var appName = defaultAppName
+
+    private lateinit var prInfo: PrInformationManager
 
     init {
         readAndProcessArguments(arguments)
@@ -12,8 +13,6 @@ class SlackNotificationsCreator(arguments: Array<String>) {
         if (arguments.size < 5) {
             return
         }
-        appName = arguments.find { it.toLowerCase().startsWith(appNameParam) }?.substring(appNameParam.length)
-            ?: defaultAppName
         val action = arguments.find { it.toLowerCase().startsWith(jobParam) }?.substring(jobParam.length)
         val stateStr = arguments.find { it.toLowerCase().startsWith(stateParam) }?.substring(stateParam.length)
         val state = when (stateStr?.toLowerCase()) {
@@ -27,6 +26,9 @@ class SlackNotificationsCreator(arguments: Array<String>) {
         val pathFile = arguments.find { it.toLowerCase().startsWith(fileParam) }?.substring(fileParam.length)
         val versionName = arguments.find { it.toLowerCase().startsWith(versionNameParam) }
             ?.substring(versionNameParam.length)
+        val prInformationPath = arguments.find { it.toLowerCase().startsWith(prParam) }?.substring(prParam.length)
+        val prInformation = FileManager().readFileAsStringResult(prInformationPath.orEmpty())
+        prInfo = PrInformationManager(prInformation)
         val slackFormatJSON = createAttachmentsJSON(action, state, message, linkToBuild, versionName)
         pathFile?.let { path -> writeFile(slackFormatJSON, path) }
     }
@@ -40,12 +42,14 @@ class SlackNotificationsCreator(arguments: Array<String>) {
     ): JSONArray {
         val attachments = JSONArray()
         val blocks = JSONArray()
-        val headerContent = generateMarkdownJSON("*$appName*") // AppName
+        val headerContent = generateMarkdownJSON("*${prInfo.sourceBranch ?: defaultAppName}*") // Branch Source
         val header = JSONObject().apply {
             put("type", "section")
             put("text", headerContent)
         }
         val fields = JSONArray().apply {
+            prInfo.title?.let { put(generateMarkdownJSON("*PR Title:*\n$it")) }
+            prInfo.destinationBranch?.let { put(generateMarkdownJSON("*Branch Destination:*\n$it")) }
             put(generateMarkdownJSON("*Job:*\n$action"))
             put(generateMarkdownJSON("*State:*\n${state?.name}"))
             val icon = if (state == PipelineState.SUCCESS) {
@@ -59,6 +63,8 @@ class SlackNotificationsCreator(arguments: Array<String>) {
             }
             put(generateMarkdownJSON("*Message:*\n$message $icon"))
             put(generateMarkdownJSON("*Version:*\n$version"))
+            prInfo.author?.let { put(generateMarkdownJSON("*Author:*\n$it")) }
+            prInfo.url?.let { put(generateMarkdownJSON("**PR url:*\n$it")) }
         }
         val dataContent = JSONObject().apply {
             put("type", "section")
@@ -103,7 +109,7 @@ class SlackNotificationsCreator(arguments: Array<String>) {
         const val messageParam = "message="
         const val linkParam = "link="
         const val fileParam = "file="
-        const val appNameParam = "app_name="
         const val versionNameParam = "version_name="
+        const val prParam = "pr_information="
     }
 }

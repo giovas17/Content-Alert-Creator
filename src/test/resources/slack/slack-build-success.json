@@ -4,7 +4,7 @@
     "blocks": [
       {
         "text": {
-          "text": "*ThiveMarketTest*",
+          "text": "*test/ci_cd_pipeline_flow*",
           "type": "mrkdwn"
         },
         "type": "section"
@@ -12,6 +12,14 @@
       {
         "type": "section",
         "fields": [
+          {
+            "text": "*PR Title:*\nAN-12255 - Test-CI/CD Concourse pipeline title",
+            "type": "mrkdwn"
+          },
+          {
+            "text": "*Branch Destination:*\nfeature/adding_concourse_ci_implementation",
+            "type": "mrkdwn"
+          },
           {
             "text": "*Job:*\nBuild",
             "type": "mrkdwn"
@@ -26,6 +34,14 @@
           },
           {
             "text": "*Version:*\n1.0",
+            "type": "mrkdwn"
+          },
+          {
+            "text": "*Author:*\ngiovas17",
+            "type": "mrkdwn"
+          },
+          {
+            "text": "**PR url:*\nhttps://github.com/ThriveMarket/android/pull/2900",
             "type": "mrkdwn"
           }
         ]

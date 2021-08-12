@@ -40,4 +40,26 @@ class PrInformationManager(jsonContent: String) {
     }
 
     private fun findValueFor(key: String) : String = info[key].orEmpty()
+
+    fun getTitlePr(): String {
+        val indexDelimiter = title?.indexOf(delimiter) ?: -1
+        return if ((indexDelimiter != -1) && title?.startsWith("AN") == true) {
+            title?.substring(indexDelimiter + 3, title?.length ?: 0).orEmpty().trim()
+        } else {
+            title.orEmpty()
+        }
+    }
+
+    fun getJiraTicketNumber(): String {
+        val indexDelimiter = title?.indexOf(delimiter) ?: -1
+        return if ((indexDelimiter != -1) && title?.startsWith("AN") == true) {
+            title?.substring(0, indexDelimiter).orEmpty().trim()
+        } else {
+            ""
+        }
+    }
+
+    private companion object {
+        const val delimiter = " - "
+    }
 }

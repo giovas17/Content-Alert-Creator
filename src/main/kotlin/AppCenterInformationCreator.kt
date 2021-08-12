@@ -11,12 +11,11 @@ class AppCenterInformationCreator(arguments: Array<String>) {
             ?: defaultPlatform
         val prInformationPath = arguments.find { it.toLowerCase().startsWith(prParam) }?.substring(prParam.length)
         val prInformation = FileManager().readFileAsStringResult(prInformationPath.orEmpty())
-        println(prInformation)
+        println("PR information: $prInformation")
         prInfo = PrInformationManager(prInformation)
-        println("prInfo: $prInfo.toString()")
-        val buildTitle = getTitlePr()
+        val buildTitle = prInfo.getTitlePr()
         println("title from Pr: $buildTitle")
-        val jiraTicket = getJiraTicketNumber()
+        val jiraTicket = prInfo.getJiraTicketNumber()
         println("jira from title: $jiraTicket")
         val filePath = arguments.find { it.toLowerCase().startsWith(fileParam) }?.substring(fileParam.length)
         val environment = (arguments.find { it.toLowerCase().startsWith(environmentParam) }
@@ -31,24 +30,6 @@ class AppCenterInformationCreator(arguments: Array<String>) {
             platform, buildTitle, jiraTicket, environment, optimizedTesting,
             amplitudeTesting, additionalInfo, filePath
         )
-    }
-
-    private fun getTitlePr(): String {
-        val indexDelimiter = prInfo.title?.indexOf(delimiter) ?: -1
-        return if ((indexDelimiter != -1) && prInfo.title?.startsWith("AN") == true) {
-            prInfo.title?.substring(indexDelimiter + 3, prInfo.title?.length ?: 0).orEmpty().trim()
-        } else {
-            prInfo.title.orEmpty()
-        }
-    }
-
-    private fun getJiraTicketNumber(): String {
-        val indexDelimiter = prInfo.title?.indexOf(delimiter) ?: -1
-        return if ((indexDelimiter != -1) && prInfo.title?.startsWith("AN") == true) {
-            prInfo.title?.substring(0, indexDelimiter).orEmpty().trim()
-        } else {
-            ""
-        }
     }
 
     private fun processInformation(
@@ -95,6 +76,5 @@ class AppCenterInformationCreator(arguments: Array<String>) {
         const val defaultEnvironment = "Staging"
         const val defaultPlatform = "Android"
         const val linkToJira = "https://thrivemarket.atlassian.net/browse/"
-        const val delimiter = " - "
     }
 }
