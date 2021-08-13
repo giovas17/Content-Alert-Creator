@@ -64,7 +64,7 @@ class SlackNotificationsCreator(arguments: Array<String>) {
             put(generateMarkdownJSON("*Message:*\n$message $icon"))
             put(generateMarkdownJSON("*Version:*\n$version"))
             prInfo.author?.let { put(generateMarkdownJSON("*Author:*\n$it")) }
-            prInfo.url?.let { put(generateMarkdownJSON("**PR url:*\n$it")) }
+            prInfo.url?.let { put(generateMarkdownJSON("*PR url:*\n$it")) }
         }
         val dataContent = JSONObject().apply {
             put("type", "section")
